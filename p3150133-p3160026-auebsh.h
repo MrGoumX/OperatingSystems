@@ -12,6 +12,7 @@
 #include <ctype.h>
 
 void populateArgs(char **args, char *input);
+void populateArgsWs(char **args, char *input);
 void populateCommandArray(char **args[], int* size, char *input);
 
 int countArgs(char *input);

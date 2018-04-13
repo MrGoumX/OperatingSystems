@@ -47,6 +47,21 @@ void populateArgs(char **args, char *input) {
     args[count] = NULL;
 }
 
+void populateArgsWs(char **args, char *input){
+    int count = 0;
+    char *tk_pntr;
+
+    char *tk;
+    tk = strtok_r(input, " ", &tk_pntr);
+    while(tk != NULL){
+        if(strlen(tk) != 0 && *tk != '-'){
+            args[count++] = tk;
+        }
+        tk = strtok_r(NULL, " ", &tk_pntr);
+    }
+    args[count] = NULL;
+}
+
 void handleIORedirects(int size, char **args, char **command) {
     int c = -1, cmdDone = 0, cmdCnt = 0;
     while (++c < size) {
