@@ -12,7 +12,7 @@ int main() {
     char c;
 
     while (1) {
-        printf("auebsh2> ");
+        printf("auebsh3> ");
 
         input = malloc(length * sizeof(char));
         int count = 0;
