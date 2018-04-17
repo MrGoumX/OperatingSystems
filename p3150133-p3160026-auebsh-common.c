@@ -3,7 +3,7 @@
 //
 #include "p3150133-p3160026-auebsh.h"
 
-int countArgs(char *input) {
+int howMany(char *input) {
     char *temp = malloc(strlen(input) + 1);
     strcpy(temp, input);
     int count = 0;
@@ -18,7 +18,7 @@ int countArgs(char *input) {
     return count;
 }
 
-int countCommands(char *input) {
+int howManyCmd(char *input) {
     char *temp = malloc(strlen(input) + 1);
     strcpy(temp, input);
     int count = 0;
@@ -33,7 +33,7 @@ int countCommands(char *input) {
     return count;
 }
 
-void populateArgs(char **args, char *input) {
+void saveArgs(char **args, char *input) {
     int count = 0;
     char *tk_pntr;
 
@@ -47,7 +47,7 @@ void populateArgs(char **args, char *input) {
     args[count] = NULL;
 }
 
-void populateArgsWs(char **args, char *input){
+void saveArgsWs(char **args, char *input){
     int count = 0;
     char *tk_pntr;
 
@@ -62,7 +62,7 @@ void populateArgsWs(char **args, char *input){
     args[count] = NULL;
 }
 
-void handleIORedirects(int size, char **args, char **command) {
+void redirect(int size, char **args, char **command) {
     int c = -1, cmdDone = 0, cmdCnt = 0;
     while (++c < size) {
         if (strcmp(args[c], ">") == 0) {

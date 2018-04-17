@@ -13,7 +13,6 @@ int main() {
 
     while (1) {
         printf("auebsh5> ");
-
         input = malloc(length * sizeof(char));
         int count = 0;
         while((c = getchar()) != '\n' && c != EOF){
@@ -23,28 +22,19 @@ int main() {
             input[count++] = c;
         }
         input[count]= '\0';
-
         if (strcmp(input, "exit") == 0) {
             printf("Goodbye!\n");
             exit(0);
         }
-
-        if (strcmp(input, "exit") == 0) {
-            printf("Bye bye!\n");
-            exit(0);
-        }
-
-        int cmd_tick = 0;
-        int cmd_total_len = countCommands(input);
-        int pipe_count = cmd_total_len - 1;
-        char *curr_ptr;
-        char* curr_cmd = strtok_r(input, "|", &curr_ptr);
-
+        int sum = 0;
+        int sop = howManyCmd(input);
+        int sop2 = sop - 1;
+        char *ptr;
+        char* splitcmd = strtok_r(input, "|", &ptr);
         int ** pipe_p;
-        if (pipe_count) {
-            pipe_p = malloc((pipe_count) * sizeof(int*));
-
-            for (int i = 0; i < pipe_count; i++) {
+        if (sop2) {
+            pipe_p = malloc((sop2) * sizeof(int*));
+            for (int i = 0; i < sop2; i++) {
                 pipe_p[i] = malloc(2 * sizeof(int));
                 if(pipe(pipe_p[i]) == -1) {
                     perror("ERROR: Pipe failed.\n");
@@ -52,56 +42,46 @@ int main() {
                 }
             }
         }
-
-        while (curr_cmd != NULL) {
-            int cmd_len = countArgs(curr_cmd);
-            char* cmd_constr[cmd_len];
-
-            populateArgs(cmd_constr, curr_cmd);
-
-            pid_t pid = fork();
-
-            if (pid < 0) {
+        while (splitcmd != NULL) {
+            int socmd = howMany(splitcmd);
+            char* cmd_constr[socmd];
+            saveArgs(cmd_constr, splitcmd);
+            pid_t proc = fork();
+            if (proc < 0) {
                 perror("ERROR: Fork failed.\n");
                 return -1;
             }
-
-            if (pid == 0) {
-                char *cmd[cmd_len];
-                handleIORedirects(cmd_len, cmd_constr, cmd);
-
-                if (pipe_count) {
-                    if (cmd_tick < pipe_count) {
+            if (proc == 0) {
+                char *cmd[socmd];
+                redirect(socmd, cmd_constr, cmd);
+                if (sop2) {
+                    if (sum < sop2) {
                         close(STDOUT_FILENO);
-                        dup(pipe_p[cmd_tick][1]);
+                        dup(pipe_p[sum][1]);
                     }
-                    if (cmd_tick > 0) {
+                    if (sum > 0) {
                         close(STDIN_FILENO);
-                        dup(pipe_p[cmd_tick - 1][0]);
+                        dup(pipe_p[sum - 1][0]);
                     }
                 }
-
                 execvp(cmd[0], cmd);
                 exit(0);
             } else {
                 int status;
                 wait(&status);
-
-                if (pipe_count) {
-                    if (cmd_tick < pipe_count) {
-                        close(pipe_p[cmd_tick][1]);
+                if (sop2) {
+                    if (sum < sop2) {
+                        close(pipe_p[sum][1]);
                     }
-                    if (cmd_tick > 0) {
-                        close(pipe_p[cmd_tick - 1][0]);
+                    if (sum > 0) {
+                        close(pipe_p[sum - 1][0]);
                     }
                 }
             }
-
-            cmd_tick++;
-            curr_cmd = strtok_r(NULL, "|", &curr_ptr);
+            sum++;
+            splitcmd = strtok_r(NULL, "|", &ptr);
         }
-
-        if (pipe_count)
+        if (sop2)
             free(pipe_p);
         free(input);
     }

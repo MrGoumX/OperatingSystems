@@ -13,7 +13,6 @@ int main() {
 
     while (1) {
         printf("auebsh3> ");
-
         input = malloc(length * sizeof(char));
         int count = 0;
         while((c = getchar()) != '\n' && c != EOF){
@@ -23,40 +22,28 @@ int main() {
             input[count++] = c;
         }
         input[count]= '\0';
-
         if (strcmp(input, "exit") == 0) {
             printf("Goodbye!\n");
             exit(0);
         }
 
-        if (strcmp(input, "exit") == 0) {
-            printf("Bye bye!\n");
-            exit(0);
-        }
-
-        int cmd_len = countArgs(input);
-        char* cmd_constr[cmd_len];
-
-        populateArgs(cmd_constr, input);
-
-        pid_t pid = fork();
-
-        if (pid < 0) {
+        int args = howMany(input);
+        char* toExec[args];
+        saveArgs(toExec, input);
+        pid_t proc = fork();
+        if (proc < 0) {
             perror("ERROR: Fork failed.\n");
             return -1;
         }
-
-        if (pid == 0) {
-            char *cmd[cmd_len];
-            handleIORedirects(cmd_len, cmd_constr, cmd);
-
+        if (proc == 0) {
+            char *cmd[args];
+            redirect(args, toExec, cmd);
             execvp(cmd[0], cmd);
             exit(0);
         } else {
             int status;
-            int wpid = wait(&status);
-
-            if (wpid == -1) {
+            int wproc = wait(&status);
+            if (wproc == -1) {
                 perror("ERROR: Waitpid failed.\n");
                 return -1;
             }
