@@ -83,15 +83,17 @@ void redirect(int size, char **args, char **command) {
 int checkForAnnexation(char *args){
     char *input = malloc(strlen(args)+1);
     strcpy(input, args);
+    int res = 0;
     char *tk;
     char *tk_ptr;
     tk = strtok_r(input, " ", &tk_ptr);
     while(tk != NULL){
         if(strcmp(tk, ">>")==0){
-            free(input);
-            return -1;
+            res = -1;
+            break;
         }
         tk = strtok_r(NULL, " ", &tk_ptr);
     }
     free(input);
+    return res;
 }

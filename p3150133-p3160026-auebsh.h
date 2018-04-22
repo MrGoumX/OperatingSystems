@@ -9,7 +9,6 @@
 
 void saveArgs(char **args, char *input);
 void saveArgsWs(char **args, char *input);
-void populateCommandArray(char **args[], int* size, char *input);
 
 int howMany(char *input);
 int howManyCmd(char *input);
