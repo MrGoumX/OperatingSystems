@@ -1,7 +1,3 @@
-//
-// Created by MrGoumX on 13/4/2018.
-//
-
 #ifndef OPERATINGSYSTEMS_P3150133_P3160026_AUEBSH_H
 #define OPERATINGSYSTEMS_P3150133_P3160026_AUEBSH_H
 
@@ -17,6 +13,7 @@ void populateCommandArray(char **args[], int* size, char *input);
 
 int howMany(char *input);
 int howManyCmd(char *input);
+int checkForAnnexation(char *args);
 
 void redirect(int size, char **args, char **command);
 

@@ -26,7 +26,11 @@ int main() {
             printf("Goodbye!\n");
             exit(0);
         }
-
+        int ann = checkForAnnexation(input);
+        if (ann==-1) {
+            printf("No annexations allowed\n");
+            continue;
+        }
         int args = howMany(input);
         char* toExec[args];
         saveArgs(toExec, input);

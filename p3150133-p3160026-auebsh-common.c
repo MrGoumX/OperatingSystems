@@ -68,9 +68,6 @@ void redirect(int size, char **args, char **command) {
         if (strcmp(args[c], ">") == 0) {
             freopen(args[++c], "w", stdout);
             cmdDone = 1;
-        } else if (strcmp(args[c], ">>") == 0) {
-            freopen(args[++c], "a+", stdout);
-            cmdDone = 1;
         } else if (strcmp(args[c], "<") == 0) {
             freopen(args[++c], "r", stdin);
             cmdDone = 1;
@@ -81,4 +78,20 @@ void redirect(int size, char **args, char **command) {
         }
     }
     command[cmdCnt] = NULL;
+}
+
+int checkForAnnexation(char *args){
+    char *input = malloc(strlen(args)+1);
+    strcpy(input, args);
+    char *tk;
+    char *tk_ptr;
+    tk = strtok_r(input, " ", &tk_ptr);
+    while(tk != NULL){
+        if(strcmp(tk, ">>")==0){
+            free(input);
+            return -1;
+        }
+        tk = strtok_r(NULL, " ", &tk_ptr);
+    }
+    free(input);
 }

@@ -26,6 +26,13 @@ int main() {
             printf("Goodbye!\n");
             exit(0);
         }
+        int ann = checkForAnnexation(input);
+        if (ann==-1) {
+            printf("No annexations allowed\n");
+            continue;
+        }
+        int toCheck = howMany(input);
+        char *toCheckInput[toCheck];
         int sum = 0;
         int sop = howManyCmd(input);
         char *ptr;

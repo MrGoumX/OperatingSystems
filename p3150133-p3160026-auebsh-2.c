@@ -26,9 +26,15 @@ int main() {
             printf("Goodbye!\n");
             exit(0);
         }
+        int ann = checkForAnnexation(input);
+        if (ann==-1) {
+            printf("No annexations allowed\n");
+            continue;
+        }
         int args = howMany(input);
-        char* toExec[args];
+        char *toExec[args];
         saveArgsWs(toExec, input);
+
         pid_t proc = fork();
         if (proc < 0) {
             perror("ERROR: Fork failed.\n");
